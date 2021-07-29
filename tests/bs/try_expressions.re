@@ -1,0 +1,35 @@
+exception My_salsa(string);
+
+let message = e => Js.Exn.message(e) |> Js.Option.getWithDefault("(empty)");
+
+let fail_js = x =>
+  try%async(Js.Exn.raiseError(x) |> Js.Promise.resolve) {
+  | Js.Exn.Error(e) => message(e)
+  | _ => ""
+  };
+
+let fail_js' = x =>
+  try%async'(Js.Exn.raiseError(x) |> Js.Promise.resolve) {
+  | Js.Exn.Error(e) => message(e) |> Js.Promise.resolve
+  };
+
+let fail_bs = x =>
+  try%async(raise(My_salsa(x)) |> Js.Promise.resolve) {
+  | My_salsa(e) => e
+  };
+
+let fail_bs' = x =>
+  try%async'(raise(My_salsa(x)) |> Js.Promise.resolve) {
+  | My_salsa(e) => e |> Js.Promise.resolve
+  };
+
+let fail_promise = x =>
+  try%async(Js.Promise.reject(x)) {
+  | Js.Exn.Error(e) => message(e)
+  };
+
+let fail_promise' = x =>
+  try%async'(Js.Promise.reject(x)) {
+  | Js.Exn.Error(e) => message(e) |> Js.Promise.resolve
+  | _ => "Ignored" |> Js.Promise.resolve
+  };
