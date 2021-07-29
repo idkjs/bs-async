@@ -3,14 +3,21 @@
   "version": "0.1.0",
   "description": "A syntax extension to deal with JS promises in Bucklescript",
   "esy": {
-    "build": ["ocamlfind ocamlopt -o #{self.root}/ppx -I +compiler-libs ocamlcommon.cmxa #{self.root}/native/bs_async.ml"]
+    "build": [
+      "ocamlfind ocamlopt -o #{self.root}/ppx -I +compiler-libs ocamlcommon.cmxa #{self.root}/native/bs_async.re -pp \"refmt -p ml\" -o bs_async"
+    ]
   },
   "dependencies": {
-    "ocaml": "4.06.1",
+    "ocaml": "4.12.x",
+    "melange": "melange-re/melange",
+    "@opam/ocaml-lsp-server": "*",
     "@opam/ocamlfind": "*"
   },
   "devDependencies": {
-    "@opam/ppx_tools": "*"
+    "@opam/ppx_tools": "*",
+    "@opam/ocaml-lsp-server": "*",
+    "@opam/reason": "*",
+    "@opam/dune": "*",
+    "ocaml": "4.12.x"
   }
 }
-
